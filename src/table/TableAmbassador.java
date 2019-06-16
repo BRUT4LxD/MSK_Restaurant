@@ -11,8 +11,6 @@ import java.util.ArrayList;
 
 public class TableAmbassador extends NullFederateAmbassador {
 
-
-
     protected double federateTime = 0.0;
 
     protected double federateLookahead = 1.0;
@@ -24,12 +22,8 @@ public class TableAmbassador extends NullFederateAmbassador {
     protected boolean running = true;
     protected int queueSize;
 
-
     protected ArrayList<ExternalEvent> externalEvents = new ArrayList<>();
     private TableFederate fed;
-
-
-
 
     public TableAmbassador(TableFederate fed) {
         this.fed = fed;

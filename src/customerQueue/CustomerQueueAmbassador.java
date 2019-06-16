@@ -33,7 +33,7 @@ public class CustomerQueueAmbassador extends NullFederateAmbassador {
 
     protected boolean running = true;
     protected int addCustomerHandle = 0;
-    protected int getCustomerHandle = 0;
+    protected int getCustomerHandle = 1;
     protected int removeCustomerHandle = 0;
 
     protected ArrayList<ExternalEvent> externalEvents = new ArrayList<>();
@@ -112,12 +112,10 @@ public class CustomerQueueAmbassador extends NullFederateAmbassador {
 
             }
 
-        } else if (interactionClass == getCustomerHandle) {
+        } else {
             double time = convertTime(theTime);
             externalEvents.add(new ExternalEvent(ExternalEvent.EventType.GET, time));
             log("Usunieto z kolejki");
         }
-
-
     }
 }

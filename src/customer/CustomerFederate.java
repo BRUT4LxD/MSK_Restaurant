@@ -18,7 +18,7 @@ public class CustomerFederate {
     public static final String READY_TO_RUN = "ReadyToRun";
 
     private RTIambassador rtiamb;
-    private CustomerAmbassador fedamb;
+    private CustomerAmbassador customerAmbassador;
     private int customerId;
 
     public void runFederate() throws RTIexception {
@@ -39,13 +39,13 @@ public class CustomerFederate {
             return;
         }
 
-        fedamb = new CustomerAmbassador(this);
-        rtiamb.joinFederationExecution( "CustomerFederate", "Federation - Restaurant", fedamb );
+        customerAmbassador = new CustomerAmbassador(this);
+        rtiamb.joinFederationExecution( "CustomerFederate", "Federation - Restaurant", customerAmbassador);
         log( "Joined Federation as CustomerFederate");
 
         rtiamb.registerFederationSynchronizationPoint( READY_TO_RUN, null );
 
-        while( fedamb.isAnnounced == false ) {
+        while( customerAmbassador.isAnnounced == false ) {
             rtiamb.tick();
         }
 
@@ -54,15 +54,15 @@ public class CustomerFederate {
         rtiamb.synchronizationPointAchieved( READY_TO_RUN );
         log( "Achieved sync point: " +READY_TO_RUN+ ", waiting for federation..." );
 
-        while( fedamb.isReadyToRun == false ) {
+        while( customerAmbassador.isReadyToRun == false ) {
             rtiamb.tick();
         }
         enableTimePolicy();
 
         publishAndSubscribe();
 
-        while (fedamb.running) {
-                createClient(fedamb.federateTime + fedamb.federateLookahead);
+        while (customerAmbassador.running) {
+                createClient(customerAmbassador.federateTime + customerAmbassador.federateLookahead);
                 advanceTime(randomTime());
                 rtiamb.tick();
         }
@@ -81,16 +81,16 @@ public class CustomerFederate {
     }
 
     private void enableTimePolicy() throws RTIexception {
-        LogicalTime currentTime = convertTime( fedamb.federateTime );
-        LogicalTimeInterval lookahead = convertInterval( fedamb.federateLookahead );
+        LogicalTime currentTime = convertTime( customerAmbassador.federateTime );
+        LogicalTimeInterval lookahead = convertInterval( customerAmbassador.federateLookahead );
 
         this.rtiamb.enableTimeRegulation( currentTime, lookahead );
-        while( fedamb.isRegulating == false ) {
+        while( customerAmbassador.isRegulating == false ) {
             rtiamb.tick();
         }
 
         this.rtiamb.enableTimeConstrained();
-        while( fedamb.isConstrained == false ) {
+        while( customerAmbassador.isConstrained == false ) {
             rtiamb.tick();
         }
     }
@@ -104,10 +104,10 @@ public class CustomerFederate {
     {
    //     log("requesting time advance for: " + timestep);
         // request the advance
-        fedamb.isAdvancing = true;
-        LogicalTime newTime = convertTime( fedamb.federateTime + timestep );
+        customerAmbassador.isAdvancing = true;
+        LogicalTime newTime = convertTime( customerAmbassador.federateTime + timestep );
         rtiamb.timeAdvanceRequest( newTime );
-        while( fedamb.isAdvancing ) {
+        while( customerAmbassador.isAdvancing ) {
             rtiamb.tick();
         }
     }
@@ -131,7 +131,7 @@ public class CustomerFederate {
 
         LogicalTime time = convertTime( timeStep );
         rtiamb.sendInteraction( interactionHandle, parameters, "tag".getBytes(), time );
-        log("Dodano nowego kilenta, id: "+String.valueOf(customerId)+" aa: "+String.valueOf(fedamb.federateTime));
+        log("Dodano nowego kilenta, id: "+String.valueOf(customerId)+" aa: "+String.valueOf(customerAmbassador.federateTime));
     }
 
 

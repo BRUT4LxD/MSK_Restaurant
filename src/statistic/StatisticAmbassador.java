@@ -144,12 +144,11 @@ public class StatisticAmbassador extends NullFederateAmbassador {
             if (theObject == timeHandle) {
                 double time = convertTime(theTime);
                 double waitingTime = EncodingHelpers.decodeDouble(theAttributes.getValue(i));
+                System.out.println(theAttributes);
                 externalEvents.add(new ExternalEvent(waitingTime, ExternalEvent.EventType.TIME, time));
                 log("Czas oczekiwania " + String.valueOf(waitingTime));
 
             } else {
-
-
                     int queueSize = EncodingHelpers.decodeInt(theAttributes.getValue(i));
                     double time = convertTime(theTime);
                     externalEvents.add(new ExternalEvent(queueSize, ExternalEvent.EventType.ADD, time));

@@ -92,11 +92,6 @@ public class StatisticFederate {
                             this.updateQueueSize(externalEvent.getCustomerId(), fedamb.federateTime + fedamb.federateLookahead);
                             break;
                         case TIME:
-                            System.out.println("CustomerId - " + externalEvent.getCustomerId());
-                            System.out.println("waiting Time - " + externalEvent.getWaitingTime());
-                            System.out.println("Current avg time - " + this.avgWaitingTime);
-                            System.out.println("federateLookAhead - " + fedamb.federateLookahead);
-                            System.out.println("federateTime- " + fedamb.federateTime);
                             this.updateWaitingTime(externalEvent.getWaitingTime(), fedamb.federateTime + fedamb.federateLookahead);
                             break;
                     }

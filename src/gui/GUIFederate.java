@@ -47,8 +47,8 @@ public class GUIFederate extends Application {
     LineChart.Series<Number, Number> timeSeries = new LineChart.Series<>();
     LineChart.Series<Number, Number> queueSizeSeries = new LineChart.Series<>();
 
-    private RTIambassador rtiamb;
-    private GUIAmbassador fedamb;
+    private RTIambassador rtiAmbassador;
+    private GUIAmbassador guiAmbassador;
 
 
     public static void main(String[] args) throws IOException {
@@ -60,11 +60,11 @@ public class GUIFederate extends Application {
     }
 
     public void runFederate() throws RTIexception, IOException {
-        rtiamb = RtiFactoryFactory.getRtiFactory().createRtiAmbassador();
+        rtiAmbassador = RtiFactoryFactory.getRtiFactory().createRtiAmbassador();
         try {
 
             File fom = new File("restaurant.fed");
-            rtiamb.createFederationExecution("Federation - Restaurant",
+            rtiAmbassador.createFederationExecution("Federation - Restaurant",
                     fom.toURI().toURL());
             log("Created Federation");
         } catch (FederationExecutionAlreadyExists exists) {
@@ -75,23 +75,23 @@ public class GUIFederate extends Application {
             return;
         }
 
-        fedamb = new GUIAmbassador(this);
-        rtiamb.joinFederationExecution("GUIFederate", "Federation - Restaurant", fedamb);
+        guiAmbassador = new GUIAmbassador(this);
+        rtiAmbassador.joinFederationExecution("GUIFederate", "Federation - Restaurant", guiAmbassador);
         log("Joined Federation as GuiFederate");
 
-        rtiamb.registerFederationSynchronizationPoint(READY_TO_RUN, null);
+        rtiAmbassador.registerFederationSynchronizationPoint(READY_TO_RUN, null);
 
-        while (fedamb.isAnnounced == false) {
-            rtiamb.tick();
+        while (guiAmbassador.isAnnounced == false) {
+            rtiAmbassador.tick();
         }
 
         waitForUser();
 
-        rtiamb.synchronizationPointAchieved(READY_TO_RUN);
+        rtiAmbassador.synchronizationPointAchieved(READY_TO_RUN);
         log("Achieved sync point: " + READY_TO_RUN + ", waiting for federation...");
 
-        while (fedamb.isReadyToRun == false) {
-            rtiamb.tick();
+        while (guiAmbassador.isReadyToRun == false) {
+            rtiAmbassador.tick();
         }
         enableTimePolicy();
 
@@ -105,7 +105,7 @@ public class GUIFederate extends Application {
 
 
 
-        while (fedamb.running) {
+        while (guiAmbassador.running) {
 
             log("advanceTime!!!");
             advanceTime(1.0);
@@ -157,12 +157,12 @@ public class GUIFederate extends Application {
             avgQueueSizeLabel.setText(avgLengthString);
 
             if(queueSize!=lastQueueSize){
-                queueSizeSeries.getData().add(new LineChart.Data(fedamb.federateTime, queueSize));
+                queueSizeSeries.getData().add(new LineChart.Data(guiAmbassador.federateTime, queueSize));
                 lastQueueSize = queueSize;
             }
 
             if(waitingTime!=lastWaitingTimeAvg){
-                timeSeries.getData().add(new LineChart.Data(fedamb.federateTime, waitingTime));
+                timeSeries.getData().add(new LineChart.Data(guiAmbassador.federateTime, waitingTime));
                 lastWaitingTimeAvg = waitingTime;
             }
 
@@ -200,39 +200,39 @@ public class GUIFederate extends Application {
     }
 
     private void enableTimePolicy() throws RTIexception {
-        LogicalTime currentTime = convertTime(fedamb.federateTime);
-        LogicalTimeInterval lookahead = convertInterval(fedamb.federateLookahead);
+        LogicalTime currentTime = convertTime(guiAmbassador.federateTime);
+        LogicalTimeInterval lookahead = convertInterval(guiAmbassador.federateLookahead);
 
-        this.rtiamb.enableTimeRegulation(currentTime, lookahead);
-        while (fedamb.isRegulating == false) {
-            rtiamb.tick();
+        this.rtiAmbassador.enableTimeRegulation(currentTime, lookahead);
+        while (guiAmbassador.isRegulating == false) {
+            rtiAmbassador.tick();
         }
 
-        this.rtiamb.enableTimeConstrained();
-        while (fedamb.isConstrained == false) {
-            rtiamb.tick();
+        this.rtiAmbassador.enableTimeConstrained();
+        while (guiAmbassador.isConstrained == false) {
+            rtiAmbassador.tick();
         }
     }
 
     private void publishAndSubscribe() throws RTIexception {
-        int classHandle = rtiamb.getObjectClassHandle("ObjectRoot.Statistics");
-        int queueSizeHandle = rtiamb.getAttributeHandle("queueSize", classHandle);
-        int waitingTimeHandle = rtiamb.getAttributeHandle("waitingTime", classHandle);
+        int classHandle = rtiAmbassador.getObjectClassHandle("ObjectRoot.Statistics");
+        int queueSizeHandle = rtiAmbassador.getAttributeHandle("queueSize", classHandle);
+        int waitingTimeHandle = rtiAmbassador.getAttributeHandle("waitingTime", classHandle);
 
         AttributeHandleSet attributes =
                 RtiFactoryFactory.getRtiFactory().createAttributeHandleSet();
         attributes.add(queueSizeHandle);
         attributes.add(waitingTimeHandle);
 
-        rtiamb.subscribeObjectClassAttributes(classHandle, attributes);
+        rtiAmbassador.subscribeObjectClassAttributes(classHandle, attributes);
     }
 
     private void advanceTime(double timestep) throws RTIexception {
-        fedamb.isAdvancing = true;
-        LogicalTime newTime = convertTime(fedamb.federateTime + timestep);
-        rtiamb.timeAdvanceRequest(newTime);
-        while (fedamb.isAdvancing) {
-            rtiamb.tick();
+        guiAmbassador.isAdvancing = true;
+        LogicalTime newTime = convertTime(guiAmbassador.federateTime + timestep);
+        rtiAmbassador.timeAdvanceRequest(newTime);
+        while (guiAmbassador.isAdvancing) {
+            rtiAmbassador.tick();
         }
     }
 
