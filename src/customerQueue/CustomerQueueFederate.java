@@ -38,9 +38,10 @@ public class CustomerQueueFederate {
         rtiAmbassador = RtiFactoryFactory.getRtiFactory().createRtiAmbassador();
 
         try {
-            File fom = new File("restaurant.fed");
-            rtiAmbassador.createFederationExecution("Federation - Restaurant",
-                    fom.toURI().toURL());
+//            File fom = new File("restaurant.fed");
+//            rtiAmbassador.createFederationExecution("Federation - Restaurant",
+//                    fom.toURI().toURL());
+            rtiAmbassador.createFederationExecution( "Federation - Restaurant", (new File("restaurant.xml")).toURI().toURL() );
             log("Created Federation");
         } catch (FederationExecutionAlreadyExists exists) {
             log("Didn't create federation, it already existed");

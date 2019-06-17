@@ -1,46 +1,43 @@
-<?xml version="1.0"?>
-<objectModel version="1.0" type="FOM" name="Federation - Restaurant" DTDversion="1516.2">
-<objects>
-<objectClass name="HLAobjectRoot" sharing="PublishSubscribe" order="Receive" transportation="HLAreliable" dimensions="NA">
-    <attribute name="HLAprivilegeToDeleteObject" sharing="PublishSubscribe" order="TimeStamp" transportation="HLAreliable" dimensions="NA" ownership="NoTransfer" updateCondition="NA" updateType="NA" dataType="NA"/>
-<objectClass name="Customer" sharing="PublishSubscribe" semantics="NA">
-    <attribute name="numerKolejki" sharing="PublishSubscribe" order="TimeStamp" transportation="HLAreliable" dimensions="NA" ownership="NoTransfer" updateCondition="NA" updateType="Conditional" dataType="HLAinteger32BE" semantics="NA"/>
-    <attribute name="priorytet" sharing="PublishSubscribe" order="TimeStamp" transportation="HLAreliable" dimensions="NA" ownership="NoTransfer" updateCondition="NA" updateType="Conditional" dataType="HLAinteger32BE" semantics="NA"/>
-</objectClass>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<objectModel
+        xsi:schemaLocation="http://standards.ieee.org/IEEE1516-2010 http://standards.ieee.org/downloads/1516/1516.2-2010/IEEE1516-DIF-2010.xsd"
+        xmlns="http://standards.ieee.org/IEEE1516-2010" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <objects>
+        <objectClass name="HLAobjectRoot" sharing="PublishSubscribe" order="Receive" transportation="HLAreliable"
+                     dimensions="NA">
+            <attribute name="HLAprivilegeToDeleteObject" sharing="PublishSubscribe" order="TimeStamp"
+                       transportation="HLAreliable" dimensions="NA" ownership="NoTransfer" updateCondition="NA"
+                       updateType="NA" dataType="NA"/>
+            <objectClass name="Queue" sharing="PublishSubscribe" semantics="NA">
+                <attribute name="size" sharing="PublishSubscribe" order="TimeStamp" transportation="HLAreliable"
+                           dimensions="NA" ownership="NoTransfer" updateCondition="NA"
+                           dataType="HLAinteger32BE" semantics="NA"/>
+            </objectClass>
+            <objectClass name="WaitingTime" sharing="PublishSubscribe" semantics="NA">
+                <attribute name="time" sharing="PublishSubscribe" order="TimeStamp" transportation="HLAreliable"
+                           dimensions="NA" ownership="NoTransfer" updateCondition="NA"
+                           dataType="HLAinteger32BE" semantics="NA"/>
+            </objectClass>
 
-<objectClass name="Statystyki" sharing="PublishSubscribe" semantics="NA">
-<attribute name="srCzasOczekiwaniaWKolejce" sharing="PublishSubscribe" order="TimeStamp" transportation="HLAreliable" dimensions="NA" ownership="NoTransfer" updateCondition="NA" updateType="Conditional" dataType="HLAfloat64BE" semantics="NA"/>
-<attribute name="srDlugoscKolejki" sharing="PublishSubscribe" order="TimeStamp" transportation="HLAreliable" dimensions="NA" ownership="NoTransfer" updateCondition="NA" updateType="Conditional" dataType="HLAfloat64BE" semantics="NA"/>
-<attribute name="nrKasy" sharing="PublishSubscribe" order="TimeStamp" transportation="HLAreliable" dimensions="NA" ownership="NoTransfer" updateCondition="NA" updateType="Conditional" dataType="HLAinteger32BE" semantics="NA"/>
-<attribute name="dlugoscKolejki" sharing="PublishSubscribe" order="TimeStamp" transportation="HLAreliable" dimensions="NA" ownership="NoTransfer" updateCondition="NA" updateType="Conditional" dataType="HLAinteger32BE" semantics="NA"/>
-<attribute name="czasOczekiwania" sharing="PublishSubscribe" order="TimeStamp" transportation="HLAreliable" dimensions="NA" ownership="NoTransfer" updateCondition="NA" updateType="Conditional" dataType="HLAfloat64BE" semantics="NA"/>
-<attribute name="liczbaKlientow" sharing="PublishSubscribe" order="TimeStamp" transportation="HLAreliable" dimensions="NA" ownership="NoTransfer" updateCondition="NA" updateType="Conditional" dataType="HLAinteger32BE" semantics="NA"/>
-</objectClass>
-</objectClass>
-</objects>
-<interactions>
-<interactionClass name="HLAinteractionRoot" sharing="PublishSubscribe" dimensions="NA" transportation="HLAreliable" order="Receive">
-<interactionClass name="liczbaKas" sharing="PublishSubscribe" dimensions="NA" transportation="HLAreliable" order="Receive">
-<parameter name="liczbaKas" dataType="HLAinteger32BE" semantics="NA"/>
-</interactionClass>
-<interactionClass name="koniecObslugi" sharing="PublishSubscribe" order="Receive" transportation="HLAreliable" dimensions="NA">
-<parameter name="numerKolejki" dataType="HLAinteger32BE" semantics="NA"/>
-</interactionClass>
-<interactionClass name="najkrotszaKolejka" sharing="PublishSubscribe" order="Receive" transportation="HLAreliable" dimensions="NA">
-<parameter name="numerKolejki" dataType="HLAinteger32BE" semantics="NA"/>
-</interactionClass>
-<interactionClass name="obslugaKlienta" sharing="PublishSubscribe" order="Receive" transportation="HLAreliable" dimensions="NA">
-<parameter name="numerKolejki" dataType="HLAinteger32BE" semantics="NA"/>
-<parameter name="priorytet" dataType="HLAinteger32BE" semantics="NA"/>
-</interactionClass>
-<interactionClass name="dlugoscKolejki" sharing="PublishSubscribe" order="Receive" transportation="HLAreliable" dimensions="NA">
-<parameter name="numerKolejki" dataType="HLAinteger32BE" semantics="NA"/>
-<parameter name="liczbaOsob" dataType="HLAinteger32BE" semantics="NA"/>
-</interactionClass>
-<interactionClass name="czasOczekiwania" sharing="PublishSubscribe" order="Receive" transportation="HLAreliable" dimensions="NA">
-<parameter name="numerKolejki" dataType="HLAinteger32BE" semantics="NA"/>
-<parameter name="czas" dataType="HLAfloat64BE" semantics="NA"/>
-</interactionClass>
-</interactionClass>
-</interactions>
+            <objectClass name="Statistics" sharing="PublishSubscribe" semantics="NA">
+                <attribute name="queueSize" sharing="PublishSubscribe" order="TimeStamp" transportation="HLAreliable"
+                           dimensions="NA" dataType="HLAinteger32BE" semantics="NA"/>
+                <attribute name="waitingTime" sharing="PublishSubscribe" order="TimeStamp" transportation="HLAreliable"
+                           dimensions="NA" dataType="HLAinteger32BE" semantics="NA"/>
+            </objectClass>
+        </objectClass>
+    </objects>
+    <interactions>
+        <interactionClass name="HLAinteractionRoot" sharing="PublishSubscribe" dimensions="NA"
+                          transportation="HLAreliable" order="Receive">
+            <interactionClass name="Finish" sharing="PublishSubscribe" dimensions="NA" transportation="HLAreliable"
+                              order="Receive"/>
+            <interactionClass name="GetCustomer" sharing="PublishSubscribe" dimensions="NA" transportation="HLAreliable"
+                              order="Receive"/>
+            <interactionClass name="AddCustomer" sharing="PublishSubscribe" order="Receive" transportation="HLAreliable"
+                              dimensions="NA">
+                <parameter name="id" dataType="HLAinteger32BE" semantics="NA"/>
+            </interactionClass>
+        </interactionClass>
+    </interactions>
 </objectModel>

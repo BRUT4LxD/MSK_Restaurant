@@ -43,9 +43,10 @@ public class StatisticFederate {
         rtiamb = RtiFactoryFactory.getRtiFactory().createRtiAmbassador();
 
         try {
-            File fom = new File("restaurant.fed");
-            rtiamb.createFederationExecution("Federation - Restaurant",
-                    fom.toURI().toURL());
+//            File fom = new File("restaurant.fed");
+//            rtiamb.createFederationExecution("Federation - Restaurant",
+//                    fom.toURI().toURL());
+            rtiamb.createFederationExecution( "Federation - Restaurant", (new File("restaurant.xml")).toURI().toURL() );
             log("Created Federation");
         } catch (FederationExecutionAlreadyExists exists) {
             log("Didn't create federation, it already existed");
