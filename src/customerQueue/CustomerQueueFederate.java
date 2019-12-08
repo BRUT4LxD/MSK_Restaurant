@@ -38,9 +38,6 @@ public class CustomerQueueFederate {
         rtiAmbassador = RtiFactoryFactory.getRtiFactory().createRtiAmbassador();
 
         try {
-//            File fom = new File("restaurant.fed");
-//            rtiAmbassador.createFederationExecution("Federation - Restaurant",
-//                    fom.toURI().toURL());
             rtiAmbassador.createFederationExecution( "Federation - Restaurant", (new File("restaurant.xml")).toURI().toURL() );
             log("Created Federation");
         } catch (FederationExecutionAlreadyExists exists) {
@@ -76,9 +73,8 @@ public class CustomerQueueFederate {
         registerObject();
 
         while (customerQueueAmbassador.running) {
-            double timeToAdvance = customerQueueAmbassador.federateTime + timeStep;
+           double timeToAdvance = customerQueueAmbassador.federateTime + timeStep;
            advanceTime(timeToAdvance);
-
 
             if (customerQueueAmbassador.externalEvents.size() > 0) {
                 customerQueueAmbassador.externalEvents.sort(new ExternalEvent.ExternalEventComparator());
@@ -88,7 +84,6 @@ public class CustomerQueueFederate {
                         case ADD:
                             this.addCustomerToQueue(externalEvent.getCustomerId());
                             break;
-
                         case GET:
                             this.getCustomerFromQueue(timeToAdvance + timeStep);
                             break;
@@ -96,12 +91,10 @@ public class CustomerQueueFederate {
                 }
                 customerQueueAmbassador.externalEvents.clear();
             }
-            if (customerQueueAmbassador.grantedTime == timeToAdvance) {
-                timeToAdvance += customerQueueAmbassador.federateLookahead;
-                updateQueueSize(timeToAdvance);
-                this.removeImpatientUser();
-                customerQueueAmbassador.federateTime = timeToAdvance;
-            }
+            timeToAdvance += customerQueueAmbassador.federateLookahead;
+            updateQueueSize(timeToAdvance);
+            this.removeImpatientUser();
+            customerQueueAmbassador.federateTime = timeToAdvance;
             rtiAmbassador.tick();
         }
     }
@@ -254,7 +247,7 @@ public class CustomerQueueFederate {
     public boolean randomImpatient() {
         Random random = new Random();
         int randomInt = random.nextInt(4);
-        if (randomInt == 3) return true;
+        if (randomInt == 2) return true;
         else return false;
     }
 }

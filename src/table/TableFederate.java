@@ -73,7 +73,6 @@ public class TableFederate {
         publishAndSubscribe();
 
         while (fedamb.running) {
-            double timeToAdvance = fedamb.federateTime + timeStep;
 
             advanceTime(1.0);
             this.waitOnCustomer(fedamb.federateTime );

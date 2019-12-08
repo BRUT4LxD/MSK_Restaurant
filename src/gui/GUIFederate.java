@@ -4,11 +4,16 @@ import hla.rti.*;
 import hla.rti.jlc.RtiFactoryFactory;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import org.portico.impl.hla13.types.DoubleTime;
@@ -99,13 +104,6 @@ public class GUIFederate extends Application {
         publishAndSubscribe();
 
         this.createGui();
-
-
-
-
-
-
-
         while (guiAmbassador.running) {
 
             log("advanceTime!!!");
@@ -128,8 +126,10 @@ public class GUIFederate extends Application {
             Stage stage = new Stage();
             stage.setTitle("Restaurant");
             GridPane layout = new GridPane();
+            layout.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
 
-
+            queueSizeChart.setStyle("CHART_COLOR_1: #ffff33;");
+            waitingTimeChart.setStyle("CHART_COLOR_1: #ff44ff;");
             layout.add(avgTimeLabel, 1, 1);
             layout.add(avgQueueSizeLabel, 1, 2);
             layout.add(waitingTimeChart, 1, 4);
